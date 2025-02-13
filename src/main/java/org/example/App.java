@@ -24,8 +24,6 @@ public final class App {
         ApplicationManager applicationManager = new ApplicationManager(new TextFilePathScanner(new RootDirectoryValidator()),
                 new DependencyIdentifier(), new PathSort(), new FileConcatenator());
 
-
-
         try{
             applicationManager.executeMainAlgorithm(args[0], args[1]);
             System.out.println("Успешно создан файл: " + args[1]);

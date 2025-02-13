@@ -3,7 +3,6 @@ package org.example.sorting;
 import org.example.exceptions.CyclicDependencyException;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 
 public final class PathSort {
@@ -69,7 +68,6 @@ public final class PathSort {
             }
         }
 
-
         storage.entrySet().removeIf(entry -> entry.getValue().isEmpty());
         System.out.println();
         System.out.println(sortedPaths);
@@ -84,13 +82,4 @@ public final class PathSort {
 
         return sortedPaths;
     }
-
-//    public static void main(String[] args) throws CyclicDependencyException{
-//        Map<Path, List<Path>> map = new HashMap<>();
-//        map.put(Paths.get("Folder 1/File 1-1"), new ArrayList<>(){{add(Paths.get("Folder 2/File 2-1"));}});
-//        map.put(Paths.get("Folder 2/File 2-1"),new ArrayList<>());
-//        map.put(Paths.get("Folder 2/File 2-2"),new ArrayList<>(){{add(Paths.get("Folder 1/File 1-1"));
-//        add(Paths.get("Folder 2/File 2-1"));}});
-//        System.out.println(sort(map));
-//    }
 }

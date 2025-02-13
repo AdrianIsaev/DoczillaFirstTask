@@ -38,8 +38,4 @@ public final class DependencyIdentifier {
         }
         return dependencies;
     }
-
-    public static void main(String[] args) {
-
-    }
 }
