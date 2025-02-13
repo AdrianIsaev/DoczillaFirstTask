@@ -24,7 +24,7 @@ public final class DependencyIdentifier {
             try {
                 lines = Files.readAllLines(textFilePath);
             } catch (IOException e) {
-                System.out.println("Возникла ошибка при чтении файла: " + e.getMessage());
+                System.err.println("Возникла ошибка при чтении файла: " + e.getMessage());
             }
             for (String line: lines){
                 Matcher matcher = DEPENDENCY_PATTERN.matcher(line);

@@ -1,7 +1,5 @@
 package org.example;
 
-import java.io.File;
-
 /**
  * Hello world!
  */
