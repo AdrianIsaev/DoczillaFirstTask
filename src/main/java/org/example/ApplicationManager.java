@@ -26,7 +26,7 @@ public final class ApplicationManager {
 
     public void executeMainAlgorithm(String rootDirectory, String outputFileName) throws CyclicDependencyException {
         List<Path> paths = textFilePathScanner.scanRootDirectory(rootDirectory);
-        Map<Path, List<Path>> dependencies =  dependencyIdentifier.identifyDependencies(paths);
+        Map<Path, List<Path>> dependencies =  dependencyIdentifier.identifyDependencies(paths, rootDirectory);
         List<Path> sortedPaths = pathSort.sort(dependencies);
         fileConcatenator.concatenateFiles(sortedPaths, outputFileName);
     }

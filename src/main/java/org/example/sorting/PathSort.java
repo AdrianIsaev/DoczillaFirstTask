@@ -57,6 +57,7 @@ public final class PathSort {
                             storageDependencies.remove(researchPath);
                             storage.put(entry.getKey(), storageDependencies);
 
+
                             if (dependencyWeights.get(entry.getKey()) == 0) {
                                 queue.add(entry.getKey());
                                 iterator2.remove();
@@ -70,13 +71,15 @@ public final class PathSort {
 
 
         storage.entrySet().removeIf(entry -> entry.getValue().isEmpty());
+        System.out.println();
+        System.out.println(sortedPaths);
 
         if (dependencyWeights.size() > 0) {
             List<String> cyclingDependencies = new ArrayList<>();
             for (Map.Entry<Path, List<Path>> entry: storage.entrySet()){
                 cyclingDependencies.add("Файл: " + entry.getKey() + " зависит от " + entry.getValue().toString());
             }
-            throw new CyclicDependencyException("Обнаружена циклическая зависимость " + cyclingDependencies.toString());
+            throw new CyclicDependencyException("Обнаружена циклическая зависимость " + cyclingDependencies);
         }
 
         return sortedPaths;
@@ -85,7 +88,7 @@ public final class PathSort {
 //    public static void main(String[] args) throws CyclicDependencyException{
 //        Map<Path, List<Path>> map = new HashMap<>();
 //        map.put(Paths.get("Folder 1/File 1-1"), new ArrayList<>(){{add(Paths.get("Folder 2/File 2-1"));}});
-//        map.put(Paths.get("Folder 2/File 2-1"),new ArrayList<>(){{add(Paths.get("Folder 2/File 2-1"));}});
+//        map.put(Paths.get("Folder 2/File 2-1"),new ArrayList<>());
 //        map.put(Paths.get("Folder 2/File 2-2"),new ArrayList<>(){{add(Paths.get("Folder 1/File 1-1"));
 //        add(Paths.get("Folder 2/File 2-1"));}});
 //        System.out.println(sort(map));

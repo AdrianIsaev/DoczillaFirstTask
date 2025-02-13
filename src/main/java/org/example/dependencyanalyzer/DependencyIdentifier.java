@@ -12,9 +12,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class DependencyIdentifier {
-    private static final Pattern DEPENDENCY_PATTERN = Pattern.compile("require\\S+'(.*?)'");
+    private static final Pattern DEPENDENCY_PATTERN = Pattern.compile(".*require\\s+(['`](.*?)['`]).*");
 
-    public Map<Path, List<Path>> identifyDependencies(List<Path> textFilePaths){
+    public Map<Path, List<Path>> identifyDependencies(List<Path> textFilePaths, String rootDirectory){
 
         Map<Path, List<Path>> dependencies = new HashMap<>();
 
@@ -29,13 +29,17 @@ public final class DependencyIdentifier {
             for (String line: lines){
                 Matcher matcher = DEPENDENCY_PATTERN.matcher(line);
                 if (matcher.find()){
-                    String requiredPathStr = matcher.group(1);
-                    Path requiredPath = Paths.get(requiredPathStr);
+                    String requiredPathStr = matcher.group(2);
+                    Path requiredPath = Paths.get(rootDirectory + '\\' + Paths.get(requiredPathStr) + ".txt");
                     requiredFiles.add(requiredPath);
                 }
             }
             dependencies.put(textFilePath, requiredFiles);
         }
         return dependencies;
+    }
+
+    public static void main(String[] args) {
+
     }
 }
