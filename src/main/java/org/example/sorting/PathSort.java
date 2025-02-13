@@ -6,7 +6,7 @@ import java.nio.file.Path;
 import java.util.*;
 
 public final class PathSort {
-    public static List<Path> sort(Map<Path, List<Path>> dependencies) throws CyclicDependencyException{
+    public List<Path> sort(Map<Path, List<Path>> dependencies) throws CyclicDependencyException {
         List<Path> sortedPaths = new ArrayList<>();
         Map<Path, Integer> dependencyWeights = new HashMap<>();
         List<Path> queue = new ArrayList<>();
