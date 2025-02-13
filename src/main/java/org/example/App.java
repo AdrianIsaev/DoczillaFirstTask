@@ -1,19 +1,34 @@
 package org.example;
 
+import org.example.concatenation.FileConcatenator;
+import org.example.dependencyanalyzer.DependencyIdentifier;
+import org.example.exceptions.CyclicDependencyException;
+import org.example.exceptions.InvalidInputParametersException;
+import org.example.filescanning.RootDirectoryValidator;
+import org.example.filescanning.TextFilePathScanner;
+import org.example.sorting.PathSort;
+import org.example.validation.SystemInputValidator;
+
 /**
  * Hello world!
  */
 public final class App {
-    private static final String INVALID_INPUT_PARAMETERS_MESSAGE = "Неправильно использованы параметры ввода. Команда для запуска приложения: java -cp target/DoczillaFirstTask-1.0-SNAPSHOT.jar org.example.App \"абсолютный путь итогового файла\" ";
-
     public static void main(String[] args) {
-        validateSystemInput(args);
-    }
+        try {
+            SystemInputValidator.validateInput(args);
+        }
+        catch (InvalidInputParametersException e){
+            System.err.println(e.getMessage());
+        }
 
+        ApplicationManager applicationManager = new ApplicationManager(new TextFilePathScanner(new RootDirectoryValidator()),
+                new DependencyIdentifier(), new PathSort(), new FileConcatenator());
 
-    private static void validateSystemInput(String[] args){
-        if (args.length!=2) {
-            System.out.println(INVALID_INPUT_PARAMETERS_MESSAGE);
+        try{
+            applicationManager.executeMainAlgorithm(args[0], args[1]);
+        }
+        catch (CyclicDependencyException e){
+            System.err.println(e.getMessage());
         }
     }
 }
