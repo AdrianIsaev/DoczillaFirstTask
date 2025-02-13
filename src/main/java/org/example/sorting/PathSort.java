@@ -3,6 +3,7 @@ package org.example.sorting;
 import org.example.exceptions.CyclicDependencyException;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 public final class PathSort {
@@ -11,13 +12,24 @@ public final class PathSort {
         Map<Path, Integer> dependencyWeights = new HashMap<>();
         List<Path> queue = new ArrayList<>();
 
-        for (Path path: dependencies.keySet()) dependencyWeights.put(path, 0);
+        Map<Path, List<Path>> storage = new HashMap<>();
+
+        for (Path path: dependencies.keySet()) {
+            dependencyWeights.put(path, 0);
+            storage.put(path, new ArrayList<>());
+        }
 
         for (Path path: dependencies.keySet()){
             for (Path dependency: dependencies.get(path)){
+
                 dependencyWeights.put(path, dependencyWeights.get(path) + 1);
+
+                List<Path> storageDependencyList = storage.get(path);
+                storageDependencyList.add(dependency);
+                storage.put(path, storageDependencyList);
             }
         }
+
 
         Iterator<Map.Entry<Path, Integer>> iterator = dependencyWeights.entrySet().iterator();
         while (iterator.hasNext()) {
@@ -40,6 +52,11 @@ public final class PathSort {
                     for (Path researchPath : pathDependencies) {
                         if (researchPath.equals(currentPath)) {
                             dependencyWeights.put(entry.getKey(), dependencyWeights.get(entry.getKey()) - 1);
+
+                            List<Path> storageDependencies = storage.get(entry.getKey());
+                            storageDependencies.remove(researchPath);
+                            storage.put(entry.getKey(), storageDependencies);
+
                             if (dependencyWeights.get(entry.getKey()) == 0) {
                                 queue.add(entry.getKey());
                                 iterator2.remove();
@@ -51,8 +68,15 @@ public final class PathSort {
             }
         }
 
+
+        storage.entrySet().removeIf(entry -> entry.getValue().isEmpty());
+
         if (dependencyWeights.size() > 0) {
-            throw new CyclicDependencyException("Обнаружена циклическая зависимость");
+            List<String> cyclingDependencies = new ArrayList<>();
+            for (Map.Entry<Path, List<Path>> entry: storage.entrySet()){
+                cyclingDependencies.add("Файл: " + entry.getKey() + " зависит от " + entry.getValue().toString());
+            }
+            throw new CyclicDependencyException("Обнаружена циклическая зависимость " + cyclingDependencies.toString());
         }
 
         return sortedPaths;
@@ -61,7 +85,7 @@ public final class PathSort {
 //    public static void main(String[] args) throws CyclicDependencyException{
 //        Map<Path, List<Path>> map = new HashMap<>();
 //        map.put(Paths.get("Folder 1/File 1-1"), new ArrayList<>(){{add(Paths.get("Folder 2/File 2-1"));}});
-//        map.put(Paths.get("Folder 2/File 2-1"),new ArrayList<>());
+//        map.put(Paths.get("Folder 2/File 2-1"),new ArrayList<>(){{add(Paths.get("Folder 2/File 2-1"));}});
 //        map.put(Paths.get("Folder 2/File 2-2"),new ArrayList<>(){{add(Paths.get("Folder 1/File 1-1"));
 //        add(Paths.get("Folder 2/File 2-1"));}});
 //        System.out.println(sort(map));
